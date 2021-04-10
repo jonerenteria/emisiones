@@ -132,10 +132,7 @@ met_pes_fin<-as.data.frame(cont_adj) %>% filter(TIPO=="MET.PESADO") %>%
   mutate(ANNO=as.factor(as.character(ANNO)),
          CONTAMINANTE=as.factor(CONTAMINANTE),
          SECTOR=as.factor(SECTOR)) %>%
-  mutate(DESCRIPCION=as.factor(DESCRIPCION)) %>%
-  rename(CONTAMINANTE_MET=CONTAMINANTE,
-         SECTOR_MET=SECTOR,
-         DESCRIPCION_MET=DESCRIPCION)
+  mutate(DESCRIPCION=as.factor(DESCRIPCION)) 
 
 
 ### test para git

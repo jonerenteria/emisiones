@@ -27,7 +27,51 @@ source("data.R")
     
     tab_gei()
     
-  })
+})
+  
+## GEI, filter the drop down list when choosing 
+  
+  gei_sector_choice <- reactive({
+    gei_fin %>% 
+      filter(CONTAMINANTE == input$selectContaminanteGEI) %>%
+      pull(SECTOR)
+})
+  
+  
+  gei_division_choice <- reactive({
+    gei_fin %>% 
+      filter(CONTAMINANTE == input$selectContaminanteGEI) %>%
+      filter(SECTOR == input$selectSectorGEI) %>% 
+      pull(DIVISION)
+})
+  
+  gei_class_choice <- reactive({
+    gei_fin %>% 
+      filter(CONTAMINANTE == input$selectContaminanteGEI) %>%
+      filter(SECTOR == input$selectSectorGEI) %>% 
+      filter(DIVISION == input$selectDivisionGEI) %>%
+      pull(CLASS)
+})
+  
+  gei_subclass_choice <- reactive({
+    gei_fin %>% 
+      filter(CONTAMINANTE == input$selectContaminanteGEI) %>%
+      filter(SECTOR == input$selectSectorGEI) %>% 
+      filter(DIVISION == input$selectDivisionGEI) %>%
+      filter(CLASS == input$selectClassGEI) %>%
+      pull(SUBCLASS)
+})
+  
+  
+# Observe <---
+  observe({
+    
+    updateSelectizeInput(session, "selectSectorGEI", choices = gei_sector_choice())
+    updateSelectizeInput(session, "selectDivisionGEI", choices = gei_division_choice())
+    updateSelectizeInput(session, "selectClassGEI", choices = gei_class_choice())
+    updateSelectizeInput(session, "selectSubClassGEI", choices = gei_subclass_choice())
+    
+}) 
 
 #-------------------
 # CONTAMINANTES  
@@ -39,13 +83,37 @@ source("data.R")
       filter(DESCRIPCION == input$selectDescripcionCONT) %>%
       filter(ANNO %in% input$sliderCONT[1]:input$sliderCONT[2]) 
     
-  })
+})
   
   output$data_cont <- renderTable({ 
     
     tab_cont()
     
-  })
+})
+  
+## contaminantes, filter the drop down list when choosing 
+  
+  cont_sector_choice <- reactive({
+    cont_fin %>% 
+      filter(CONTAMINANTE == input$selectContaminanteCONT) %>%
+      pull(SECTOR)
+})
+  
+  
+  cont_act_choice <- reactive({
+    cont_fin %>% 
+      filter(CONTAMINANTE == input$selectContaminanteCONT) %>%
+      filter(SECTOR == input$selectSectorCONT) %>% 
+      pull(DESCRIPCION)
+})
+  
+# Observe <---
+  observe({
+    
+    updateSelectizeInput(session, "selectSectorCONT", choices = cont_sector_choice())
+    updateSelectizeInput(session, "selectDescripcionCONT", choices = cont_act_choice())
+    
+}) 
   
 #-------------------
 # METALES PESADOS  
@@ -53,11 +121,11 @@ source("data.R")
 tab_met <- reactive({ 
     
     met_pes_fin %>% 
-      filter(CONTAMINANTE_MET %in% input$selectContaminanteMET) %>%
-      filter(SECTOR_MET %in% input$selectSectorMET) %>%
-      filter(DESCRIPCION_MET %in% input$selectDescripcionMET) %>%
+      filter(CONTAMINANTE  ==  input$selectContaminanteMET) %>%
+      filter(SECTOR  ==  input$selectSectorMET) %>%
+      filter(DESCRIPCION  ==  input$selectDescripcionMET) %>%
       filter(ANNO %in% input$sliderMET[1]:input$sliderMET[2])
-  })
+})
   
 output$data_metales <- renderTable({ 
   
@@ -65,9 +133,29 @@ output$data_metales <- renderTable({
   
 })
 
+## metales pesados, filter the drop down list when choosing 
 
-lapply(c("data_gei","data_cont", "data_metales"),
-       function(x) outputOptions(output, x, suspendWhenHidden = FALSE))   
+met_sector_choice <- reactive({
+  met_pes_fin %>% 
+    filter(CONTAMINANTE == input$selectContaminanteMET) %>%
+    pull(SECTOR)
+})
+
+
+met_act_choice <- reactive({
+  met_pes_fin %>% 
+    filter(CONTAMINANTE == input$selectContaminanteMET) %>%
+    filter(SECTOR == input$selectSectorMET) %>% 
+    pull(DESCRIPCION)
+})
+
+# Observe <---
+observe({
+  
+  updateSelectizeInput(session, "selectSectorMET", choices = met_sector_choice())
+  updateSelectizeInput(session, "selectDescripcionMET", choices = met_act_choice())
+  
+})
   
   
 }
