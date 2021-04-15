@@ -3,159 +3,79 @@ library(shiny)
 library(dplyr)
 library(tidyr)
 
+source("data.R")
 
 function(input, output, session) {
 
-source("data.R")
+
 
 #-------------------
 # GEI 
-  tab_gei <- reactive({ # <-- Reactive function here
-    
-    gei_fin %>% 
-      filter(CONTAMINANTE == input$selectContaminanteGEI) %>%
-      filter(SECTOR == input$selectSectorGEI) %>%
-      filter(DIVISION == input$selectDivisionGEI) %>%
-      filter(CLASS == input$selectClassGEI) %>%
-      filter(SUBCLASS == input$selectSubClassGEI) %>%
-      filter( `TIPO DE UNIDAD` == input$selectTDUGEI) %>%
-      filter(ANNO %in% input$sliderGEI[1]:input$sliderGEI[2]) 
 
-})
-  
-  output$data_gei <- renderTable({ 
-    
-    tab_gei()
-    
-})
-  
-## GEI, filter the drop down list when choosing 
-  
-  gei_sector_choice <- reactive({
-    gei_fin %>% 
-      filter(CONTAMINANTE == input$selectContaminanteGEI) %>%
-      pull(SECTOR)
-})
-  
-  
-  gei_division_choice <- reactive({
-    gei_fin %>% 
-      filter(CONTAMINANTE == input$selectContaminanteGEI) %>%
-      filter(SECTOR == input$selectSectorGEI) %>% 
-      pull(DIVISION)
-})
-  
-  gei_class_choice <- reactive({
-    gei_fin %>% 
-      filter(CONTAMINANTE == input$selectContaminanteGEI) %>%
-      filter(SECTOR == input$selectSectorGEI) %>% 
-      filter(DIVISION == input$selectDivisionGEI) %>%
-      pull(CLASS)
-})
-  
-  gei_subclass_choice <- reactive({
-    gei_fin %>% 
-      filter(CONTAMINANTE == input$selectContaminanteGEI) %>%
-      filter(SECTOR == input$selectSectorGEI) %>% 
-      filter(DIVISION == input$selectDivisionGEI) %>%
-      filter(CLASS == input$selectClassGEI) %>%
-      pull(SUBCLASS)
-})
-  
-  
-# Observe <---
-  observe({
-    
-    updateSelectizeInput(session, "selectSectorGEI", choices = gei_sector_choice())
-    updateSelectizeInput(session, "selectDivisionGEI", choices = gei_division_choice())
-    updateSelectizeInput(session, "selectClassGEI", choices = gei_class_choice())
-    updateSelectizeInput(session, "selectSubClassGEI", choices = gei_subclass_choice())
-    
-}) 
-
-#-------------------
-# CONTAMINANTES  
-  tab_cont <- reactive({ # <-- Reactive function here
-    
-    cont_fin %>% 
-      filter(CONTAMINANTE == input$selectContaminanteCONT) %>%
-      filter(SECTOR == input$selectSectorCONT) %>%
-      filter(DESCRIPCION == input$selectDescripcionCONT) %>%
-      filter(ANNO %in% input$sliderCONT[1]:input$sliderCONT[2]) 
-    
-})
-  
-  output$data_cont <- renderTable({ 
-    
-    tab_cont()
-    
-})
-  
-## contaminantes, filter the drop down list when choosing 
-  
-  cont_sector_choice <- reactive({
-    cont_fin %>% 
-      filter(CONTAMINANTE == input$selectContaminanteCONT) %>%
-      pull(SECTOR)
-})
-  
-  
-  cont_act_choice <- reactive({
-    cont_fin %>% 
-      filter(CONTAMINANTE == input$selectContaminanteCONT) %>%
-      filter(SECTOR == input$selectSectorCONT) %>% 
-      pull(DESCRIPCION)
-})
-  
-# Observe <---
-  observe({
-    
-    updateSelectizeInput(session, "selectSectorCONT", choices = cont_sector_choice())
-    updateSelectizeInput(session, "selectDescripcionCONT", choices = cont_act_choice())
-    
-}) 
-  
-#-------------------
-# METALES PESADOS  
-
-tab_met <- reactive({ 
-    
-    met_pes_fin %>% 
-      filter(CONTAMINANTE  ==  input$selectContaminanteMET) %>%
-      filter(SECTOR  ==  input$selectSectorMET) %>%
-      filter(DESCRIPCION  ==  input$selectDescripcionMET) %>%
-      filter(ANNO %in% input$sliderMET[1]:input$sliderMET[2])
-})
-  
-output$data_metales <- renderTable({ 
-  
-  tab_met()
+contaminante_GEI_reactive <- reactive({
+  filter(gei_fin, CONTAMINANTE_GEI == input$select_contaminante_GEI)
   
 })
 
-## metales pesados, filter the drop down list when choosing 
-
-met_sector_choice <- reactive({
-  met_pes_fin %>% 
-    filter(CONTAMINANTE == input$selectContaminanteMET) %>%
-    pull(SECTOR)
-})
-
-
-met_act_choice <- reactive({
-  met_pes_fin %>% 
-    filter(CONTAMINANTE == input$selectContaminanteMET) %>%
-    filter(SECTOR == input$selectSectorMET) %>% 
-    pull(DESCRIPCION)
-})
-
-# Observe <---
-observe({
-  
-  updateSelectizeInput(session, "selectSectorMET", choices = met_sector_choice())
-  updateSelectizeInput(session, "selectDescripcionMET", choices = met_act_choice())
+observeEvent(contaminante_GEI_reactive(), {
+  choices <- unique(contaminante_GEI_reactive()$SECTOR_GEI)
+  updateSelectizeInput(session,"select_sector_GEI", choices = choices)
   
 })
+
+sector_GEI_reactive <- reactive({
+  req(input$select_sector_GEI)
+  filter(contaminante_GEI_reactive(), SECTOR_GEI == input$select_sector_GEI)
+  
+})
+
+observeEvent(sector_GEI_reactive(), {
+  choices <- unique(sector_GEI_reactive()$DIVISION_GEI)
+  updateSelectizeInput(session,"select_division_GEI", choices = choices)
+})
+
+
+division_GEI_reactive <- reactive({
+  req(input$select_division_GEI)
+  filter(contaminante_GEI_reactive(),  DIVISION_GEI == input$select_division_GEI)
+  filter(sector_GEI_reactive(),  DIVISION_GEI == input$select_division_GEI)
+  ##### kontuz, hemen bi filatan.. geo hiru.. etc 
+})
+
+observeEvent(division_GEI_reactive(), {
+  choices <- unique(division_GEI_reactive()$CLASS_GEI)
+  updateSelectizeInput(session, "select_class_GEI", choices = choices)
+})
+
+
+class_GEI_reactive <- reactive({
+  req(input$select_class_GEI)
+  filter(contaminante_GEI_reactive(),  CLASS_GEI == input$select_class_GEI)
+  filter(sector_GEI_reactive(),  CLASS_GEI == input$select_class_GEI)
+  filter(division_GEI_reactive(),  CLASS_GEI == input$select_class_GEI)
+  
+})
+
+observeEvent(class_GEI_reactive(), {
+  choices <- unique(class_GEI_reactive()$SUBCLASS_GEI)
+  updateSelectizeInput(session, "select_subclass_GEI", choices = choices)
+})
+
+
+#no hay que hacer un reactive de subclass, ese directamente ira con el output table 
+  
+ output$data_gei <- renderTable({ 
+    req(input$select_subclass_GEI)
+    #tab_gei() 
+    class_GEI_reactive() %>%
+      filter(SUBCLASS_GEI == input$select_subclass_GEI) 
+ 
+    
+})
+  
+
+ 
+
   
   
 }

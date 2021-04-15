@@ -100,7 +100,17 @@ gei_fin<-em_fin %>%
   gather(`TIPO DE UNIDAD`,VALOR,-SECTOR,-DIVISION,-CONTAMINANTE,-CLASS,-SUBCLASS,-ANNO,-UNIDAD) %>%
   mutate(`TIPO DE UNIDAD`=gsub("value_em","EM",`TIPO DE UNIDAD`),
          `TIPO DE UNIDAD`=gsub("value_eq","CO2-Eq",`TIPO DE UNIDAD`),
-         `TIPO DE UNIDAD`=as.factor(`TIPO DE UNIDAD`))
+         `TIPO DE UNIDAD`=as.factor(`TIPO DE UNIDAD`)) %>%
+  rename(SECTOR_GEI = SECTOR, 
+         DIVISION_GEI = DIVISION, 
+         CLASS_GEI = CLASS, 
+         SUBCLASS_GEI = SUBCLASS,
+         CONTAMINANTE_GEI = CONTAMINANTE,
+         ANNO_GEI = ANNO, 
+         VALOR_GEI = VALOR, 
+         UNIDAD_GEI = UNIDAD, 
+         `TIPO DE UNIDAD_GEI` = `TIPO DE UNIDAD`) #%>%
+  #mutate_if(is.factor,as.character)
 
 
 
@@ -124,7 +134,15 @@ cont_fin<-tibble::as_tibble(cont_adj) %>% filter(TIPO=="CONT") %>%
          SECTOR = as.factor(SECTOR),
          DESCRIPCION = as.factor(DESCRIPCION),
          ANNO=as.factor(as.character(ANNO)),
-         UNIDAD = as.factor(UNIDAD))
+         UNIDAD = as.factor(UNIDAD)) %>%
+  rename(SECTOR_CONT = SECTOR, 
+         ACTIVIDAD_CONT = ACTIVIDAD, 
+         DESCRIPCION_CONT = DESCRIPCION, 
+         CONTAMINANTE_CONT = CONTAMINANTE,
+         ANNO_CONT = ANNO, 
+         VALOR_CONT = VALOR, 
+         UNIDAD_CONT = UNIDAD)
+         
 
 
 met_pes_fin<-as.data.frame(cont_adj) %>% filter(TIPO=="MET.PESADO") %>%
@@ -132,7 +150,14 @@ met_pes_fin<-as.data.frame(cont_adj) %>% filter(TIPO=="MET.PESADO") %>%
   mutate(ANNO=as.factor(as.character(ANNO)),
          CONTAMINANTE=as.factor(CONTAMINANTE),
          SECTOR=as.factor(SECTOR)) %>%
-  mutate(DESCRIPCION=as.factor(DESCRIPCION)) 
+  mutate(DESCRIPCION=as.factor(DESCRIPCION)) %>%
+  rename(SECTOR_MET = SECTOR, 
+         ACTIVIDAD_MET = ACTIVIDAD, 
+         DESCRIPCION_MET = DESCRIPCION, 
+         CONTAMINANTE_MET = CONTAMINANTE,
+         ANNO_MET = ANNO, 
+         VALOR_MET = VALOR, 
+         UNIDAD_MET = UNIDAD)
 
 
 ### test para git
