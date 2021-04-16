@@ -70,6 +70,8 @@ output$data_gei <- renderTable({
     req(input$select_subclass_GEI)
     class_GEI_reactive() %>%
       filter(SUBCLASS_GEI == input$select_subclass_GEI) %>%
+      filter(ANNO_GEI %in% input$select_anno_GEI[1]:input$select_anno_GEI[2]) %>%
+      filter(`TIPO DE UNIDAD_GEI` == input$select_value_type_GEI) %>%
       rename(SECTOR=SECTOR_GEI,
              DIVISION=DIVISION_GEI,
              CLASS=CLASS_GEI,
@@ -118,6 +120,7 @@ output$data_cont <- renderTable({
   req(input$select_descripcion_CONT)
   sector_CONT_reactive() %>%
     filter(DESCRIPCION_CONT == input$select_descripcion_CONT) %>%
+    filter(ANNO_CONT %in% input$select_anno_CONT[1]:input$select_anno_CONT[2]) %>%
     rename(SECTOR=SECTOR_CONT,
            ACTIVIDAD=ACTIVIDAD_CONT,
            CONTAMINANTE=CONTAMINANTE_CONT,
@@ -127,19 +130,23 @@ output$data_cont <- renderTable({
            UNIDAD=UNIDAD_CONT)
 })
 
+#-------------------
+# Code for the mainbar CONT: plot
+
 output$plot_cont <- renderPlot({ 
   
   req(input$select_descripcion_CONT)
 
   ggplot(data=sector_CONT_reactive() %>%
                       filter(DESCRIPCION_CONT == input$select_descripcion_CONT) %>%
+                      filter(ANNO_CONT %in% input$select_anno_CONT[1]:input$select_anno_CONT[2]) %>%
                       rename(SECTOR=SECTOR_CONT,
                              ACTIVIDAD=ACTIVIDAD_CONT,
                              CONTAMINANTE=CONTAMINANTE_CONT,
                              DESCRIPCION=DESCRIPCION_CONT,
                              ANNO=ANNO_CONT,
                              VALOR=VALOR_CONT,
-                             UNIDAD=UNIDAD_CONT),aes(x=as.numeric(ANNO),y=VALOR)) +
+                             UNIDAD=UNIDAD_CONT),aes(x=as.numeric(as.character(ANNO)),y=VALOR)) +
     geom_point()+
     geom_line()+
     theme_bw()
@@ -181,6 +188,7 @@ output$data_met <- renderTable({
   req(input$select_descripcion_MET)
   sector_MET_reactive() %>%
     filter(DESCRIPCION_MET == input$select_descripcion_MET) %>%
+    filter(ANNO_MET %in% input$select_anno_MET[1]:input$select_anno_MET[2]) %>%
     rename(SECTOR=SECTOR_MET,
            ACTIVIDAD=ACTIVIDAD_MET,
            CONTAMINANTE=CONTAMINANTE_MET,
