@@ -10,8 +10,9 @@ function(input, output, session) {
 
 
 #-------------------
-# GEI 
+# Code for the sidebar GEI 
 
+# -- Contaminante from GEIs
 contaminante_GEI_reactive <- reactive({
   filter(gei_fin, CONTAMINANTE_GEI == input$select_contaminante_GEI)
   
@@ -23,6 +24,7 @@ observeEvent(contaminante_GEI_reactive(), {
   
 })
 
+# -- Sector from GEIs
 sector_GEI_reactive <- reactive({
   req(input$select_sector_GEI)
   filter(contaminante_GEI_reactive(), SECTOR_GEI == input$select_sector_GEI)
@@ -34,12 +36,11 @@ observeEvent(sector_GEI_reactive(), {
   updateSelectizeInput(session,"select_division_GEI", choices = choices)
 })
 
-
+# -- Division from GEIs
 division_GEI_reactive <- reactive({
   req(input$select_division_GEI)
   filter(contaminante_GEI_reactive(),  DIVISION_GEI == input$select_division_GEI)
   filter(sector_GEI_reactive(),  DIVISION_GEI == input$select_division_GEI)
-  ##### kontuz, hemen bi filatan.. geo hiru.. etc 
 })
 
 observeEvent(division_GEI_reactive(), {
@@ -47,7 +48,7 @@ observeEvent(division_GEI_reactive(), {
   updateSelectizeInput(session, "select_class_GEI", choices = choices)
 })
 
-
+# -- Class from GEIs
 class_GEI_reactive <- reactive({
   req(input$select_class_GEI)
   filter(contaminante_GEI_reactive(),  CLASS_GEI == input$select_class_GEI)
@@ -61,21 +62,85 @@ observeEvent(class_GEI_reactive(), {
   updateSelectizeInput(session, "select_subclass_GEI", choices = choices)
 })
 
+#-------------------
+# Code for the mainbar GEI: table
 
-#no hay que hacer un reactive de subclass, ese directamente ira con el output table 
-  
- output$data_gei <- renderTable({ 
+output$data_gei <- renderTable({ 
     req(input$select_subclass_GEI)
-    #tab_gei() 
     class_GEI_reactive() %>%
       filter(SUBCLASS_GEI == input$select_subclass_GEI) 
- 
-    
 })
   
+#-------------------
+# Code for the sidebar CONT 
 
- 
+# -- Contaminante from CONT
+contaminante_CONT_reactive <- reactive({
+  filter(cont_fin, CONTAMINANTE_CONT == input$select_contaminante_CONT)
+  
+})
 
+observeEvent(contaminante_CONT_reactive(), {
+  choices <- unique(contaminante_CONT_reactive()$SECTOR_CONT)
+  updateSelectizeInput(session,"select_sector_CONT", choices = choices)
   
+})
+
+# -- Sector from CONT
+sector_CONT_reactive <- reactive({
+  req(input$select_sector_CONT)
+  filter(contaminante_CONT_reactive(), SECTOR_CONT == input$select_sector_CONT)
   
+})
+
+observeEvent(sector_CONT_reactive(), {
+  choices <- unique(sector_CONT_reactive()$DESCRIPCION_CONT)
+  updateSelectizeInput(session,"select_descripcion_CONT", choices = choices)
+}) 
+
+#-------------------
+# Code for the mainbar CONT: table
+
+output$data_cont <- renderTable({ 
+  req(input$select_descripcion_CONT)
+  sector_CONT_reactive() %>%
+    filter(DESCRIPCION_CONT == input$select_descripcion_CONT) 
+})
+
+#-------------------
+# Code for the sidebar MET
+
+# -- Contaminante from MET
+contaminante_MET_reactive <- reactive({
+  filter(met_pes_fin, CONTAMINANTE_MET == input$select_contaminante_MET)
+  
+})
+
+observeEvent(contaminante_MET_reactive(), {
+  choices <- unique(contaminante_MET_reactive()$SECTOR_MET)
+  updateSelectizeInput(session,"select_sector_MET", choices = choices)
+  
+})
+
+# -- Sector from MET
+sector_MET_reactive <- reactive({
+  req(input$select_sector_MET)
+  filter(contaminante_MET_reactive(), SECTOR_MET == input$select_sector_MET)
+  
+})
+
+observeEvent(sector_MET_reactive(), {
+  choices <- unique(sector_MET_reactive()$DESCRIPCION_MET)
+  updateSelectizeInput(session,"select_descripcion_MET", choices = choices)
+}) 
+
+#-------------------
+# Code for the mainbar MET: table
+
+output$data_met <- renderTable({ 
+  req(input$select_descripcion_MET)
+  sector_MET_reactive() %>%
+    filter(DESCRIPCION_MET == input$select_descripcion_MET) 
+})
+
 }

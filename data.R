@@ -126,7 +126,14 @@ cont_adj<- cont %>%
   arrange(SECTOR,ACTIVIDAD) %>%
   mutate(UNIDAD = if_else(TIPO == "CONT", "kt", "t")) %>%
   select(TIPO, SECTOR, ACTIVIDAD,DESCRIPCION ,CONTAMINANTE, ANNO, value, UNIDAD ) %>%
-  rename(VALOR = value)
+  rename(VALOR = value) %>% 
+  mutate(DESCRIPCION=if_else(grepl("Storage, handling and transport of metal pro",DESCRIPCION),
+                             "Storage, handling, and transport of metal products (please specify in the IIR)",DESCRIPCION)) %>%
+  mutate(DESCRIPCION=if_else(grepl("Consumption of POPs and heavy met",DESCRIPCION),
+                             "Consumption of POPs and heavy metals (e.g. electrical and scientific equipment)",DESCRIPCION)) 
+
+
+
 
 cont_fin<-tibble::as_tibble(cont_adj) %>% filter(TIPO=="CONT") %>%
   select(-TIPO) %>%
