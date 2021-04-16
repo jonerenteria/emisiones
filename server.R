@@ -19,7 +19,7 @@ contaminante_GEI_reactive <- reactive({
 })
 
 observeEvent(contaminante_GEI_reactive(), {
-  choices <- unique(contaminante_GEI_reactive()$SECTOR_GEI)
+  choices <- sort(unique(contaminante_GEI_reactive()$SECTOR_GEI))
   updateSelectizeInput(session,"select_sector_GEI", choices = choices)
   
 })
@@ -27,12 +27,12 @@ observeEvent(contaminante_GEI_reactive(), {
 # -- Sector from GEIs
 sector_GEI_reactive <- reactive({
   req(input$select_sector_GEI)
-  filter(contaminante_GEI_reactive(), SECTOR_GEI == input$select_sector_GEI)
+  filter(contaminante_GEI_reactive(), SECTOR_GEI == input$select_sector_GEI) 
   
 })
 
 observeEvent(sector_GEI_reactive(), {
-  choices <- unique(sector_GEI_reactive()$DIVISION_GEI)
+  choices <- sort(unique(sector_GEI_reactive()$DIVISION_GEI))
   updateSelectizeInput(session,"select_division_GEI", choices = choices)
 })
 
@@ -44,7 +44,7 @@ division_GEI_reactive <- reactive({
 })
 
 observeEvent(division_GEI_reactive(), {
-  choices <- unique(division_GEI_reactive()$CLASS_GEI)
+  choices <- sort(unique(division_GEI_reactive()$CLASS_GEI))
   updateSelectizeInput(session, "select_class_GEI", choices = choices)
 })
 
@@ -58,7 +58,7 @@ class_GEI_reactive <- reactive({
 })
 
 observeEvent(class_GEI_reactive(), {
-  choices <- unique(class_GEI_reactive()$SUBCLASS_GEI)
+  choices <- sort(unique(class_GEI_reactive()$SUBCLASS_GEI))
   updateSelectizeInput(session, "select_subclass_GEI", choices = choices)
 })
 
@@ -68,7 +68,17 @@ observeEvent(class_GEI_reactive(), {
 output$data_gei <- renderTable({ 
     req(input$select_subclass_GEI)
     class_GEI_reactive() %>%
-      filter(SUBCLASS_GEI == input$select_subclass_GEI) 
+      filter(SUBCLASS_GEI == input$select_subclass_GEI) %>%
+      rename(SECTOR=SECTOR_GEI,
+             DIVISION=DIVISION_GEI,
+             CLASS=CLASS_GEI,
+             SUBCLASS=SUBCLASS_GEI,
+             ANNO=ANNO_GEI,
+             CONTAMINANTE=CONTAMINANTE_GEI,
+             UNIDAD=UNIDAD_GEI,
+             `TIPO DE UNIDAD`=`TIPO DE UNIDAD_GEI`,
+             VALOR=VALOR_GEI)
+
 })
   
 #-------------------
@@ -81,7 +91,7 @@ contaminante_CONT_reactive <- reactive({
 })
 
 observeEvent(contaminante_CONT_reactive(), {
-  choices <- unique(contaminante_CONT_reactive()$SECTOR_CONT)
+  choices <- sort(unique(contaminante_CONT_reactive()$SECTOR_CONT))
   updateSelectizeInput(session,"select_sector_CONT", choices = choices)
   
 })
@@ -94,7 +104,7 @@ sector_CONT_reactive <- reactive({
 })
 
 observeEvent(sector_CONT_reactive(), {
-  choices <- unique(sector_CONT_reactive()$DESCRIPCION_CONT)
+  choices <- sort(unique(sector_CONT_reactive()$DESCRIPCION_CONT))
   updateSelectizeInput(session,"select_descripcion_CONT", choices = choices)
 }) 
 
@@ -104,7 +114,14 @@ observeEvent(sector_CONT_reactive(), {
 output$data_cont <- renderTable({ 
   req(input$select_descripcion_CONT)
   sector_CONT_reactive() %>%
-    filter(DESCRIPCION_CONT == input$select_descripcion_CONT) 
+    filter(DESCRIPCION_CONT == input$select_descripcion_CONT) %>%
+    rename(SECTOR=SECTOR_CONT,
+           ACTIVIDAD=ACTIVIDAD_CONT,
+           CONTAMINANTE=CONTAMINANTE_CONT,
+           DESCRIPCION=DESCRIPCION_CONT,
+           ANNO=ANNO_CONT,
+           VALOR=VALOR_CONT,
+           UNIDAD=UNIDAD_CONT)
 })
 
 #-------------------
@@ -117,7 +134,7 @@ contaminante_MET_reactive <- reactive({
 })
 
 observeEvent(contaminante_MET_reactive(), {
-  choices <- unique(contaminante_MET_reactive()$SECTOR_MET)
+  choices <- sort(unique(contaminante_MET_reactive()$SECTOR_MET))
   updateSelectizeInput(session,"select_sector_MET", choices = choices)
   
 })
@@ -130,7 +147,7 @@ sector_MET_reactive <- reactive({
 })
 
 observeEvent(sector_MET_reactive(), {
-  choices <- unique(sector_MET_reactive()$DESCRIPCION_MET)
+  choices <- sort(unique(sector_MET_reactive()$DESCRIPCION_MET))
   updateSelectizeInput(session,"select_descripcion_MET", choices = choices)
 }) 
 
@@ -140,7 +157,14 @@ observeEvent(sector_MET_reactive(), {
 output$data_met <- renderTable({ 
   req(input$select_descripcion_MET)
   sector_MET_reactive() %>%
-    filter(DESCRIPCION_MET == input$select_descripcion_MET) 
+    filter(DESCRIPCION_MET == input$select_descripcion_MET) %>%
+    rename(SECTOR=SECTOR_MET,
+           ACTIVIDAD=ACTIVIDAD_MET,
+           CONTAMINANTE=CONTAMINANTE_MET,
+           DESCRIPCION=DESCRIPCION_MET,
+           ANNO=ANNO_MET,
+           VALOR=VALOR_MET,
+           UNIDAD=UNIDAD_MET)
 })
 
 }
