@@ -2,6 +2,7 @@ library(data.table)
 library(shiny)
 library(dplyr)
 library(tidyr)
+library(ggplot2)
 
 source("data.R")
 
@@ -80,6 +81,8 @@ output$data_gei <- renderTable({
              VALOR=VALOR_GEI)
 
 })
+
+
   
 #-------------------
 # Code for the sidebar CONT 
@@ -123,6 +126,26 @@ output$data_cont <- renderTable({
            VALOR=VALOR_CONT,
            UNIDAD=UNIDAD_CONT)
 })
+
+output$plot_cont <- renderPlot({ 
+  
+  req(input$select_descripcion_CONT)
+
+  ggplot(data=sector_CONT_reactive() %>%
+                      filter(DESCRIPCION_CONT == input$select_descripcion_CONT) %>%
+                      rename(SECTOR=SECTOR_CONT,
+                             ACTIVIDAD=ACTIVIDAD_CONT,
+                             CONTAMINANTE=CONTAMINANTE_CONT,
+                             DESCRIPCION=DESCRIPCION_CONT,
+                             ANNO=ANNO_CONT,
+                             VALOR=VALOR_CONT,
+                             UNIDAD=UNIDAD_CONT),aes(x=as.numeric(ANNO),y=VALOR)) +
+    geom_point()+
+    geom_line()+
+    theme_bw()
+  
+})
+
 
 #-------------------
 # Code for the sidebar MET

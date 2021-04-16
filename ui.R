@@ -29,7 +29,7 @@ navbarPage(
   
             mainPanel(
               
-              tableOutput("data_cont")
+              tableOutput("data_cont"),plotOutput("plot_cont")
             )), 
 
     
