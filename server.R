@@ -85,6 +85,32 @@ output$data_gei <- renderTable({
 })
 
 #-------------------
+# Code for the download  GEI: table
+output$download_gei_table <- downloadHandler(
+  filename = function() {
+    paste("data-",Sys.Date(), ".csv", sep = "")
+  },
+  content = function(file) {
+    down_table_gei<-class_GEI_reactive() %>%
+      filter(SUBCLASS_GEI == input$select_subclass_GEI) %>%
+      filter(ANNO_GEI %in% input$select_anno_GEI[1]:input$select_anno_GEI[2]) %>%
+      filter(`TIPO DE UNIDAD_GEI` == input$select_value_type_GEI) %>%
+      rename(SECTOR=SECTOR_GEI,
+             DIVISION=DIVISION_GEI,
+             CLASS=CLASS_GEI,
+             SUBCLASS=SUBCLASS_GEI,
+             ANNO=ANNO_GEI,
+             CONTAMINANTE=CONTAMINANTE_GEI,
+             UNIDAD=UNIDAD_GEI,
+             `TIPO DE UNIDAD`=`TIPO DE UNIDAD_GEI`,
+             VALOR=VALOR_GEI)
+    
+    write.csv(down_table_gei, file, row.names = FALSE)
+  }
+)
+
+
+#-------------------
 # Code for the mainbar GEI: plot
 
 output$plot_gei <- renderPlot({ 
@@ -106,7 +132,7 @@ output$plot_gei <- renderPlot({
            VALOR=VALOR_GEI)  %>%
     mutate(ANNO=as.numeric(as.character(ANNO)))
   
-  ggplot(data=c) +
+  p<-ggplot(data=c) +
     geom_point(data=c,aes(x=ANNO,y=VALOR),size=5,color="black")+
     geom_line(data=c,size=2,aes(x=ANNO,y=VALOR),color="navyblue")+
     theme_bw()+
@@ -119,10 +145,55 @@ output$plot_gei <- renderPlot({
     labs(x="",y=paste0("Emisiones (",unique(c$UNIDAD),";",unique(c$`TIPO DE UNIDAD`),")"))+
     ggtitle(paste0(unique(c$CLASS)," -- ",unique(c$SUBCLASS),": Emisiones de ",unique(c$CONTAMINANTE)," por periodo (",unique(c$UNIDAD),";",unique(c$`TIPO DE UNIDAD`),")"))
   
+  print(p)
   
 })
 
+#-------------------
+# Code for the download  GEI: plot
+output$download_gei_plot <- downloadHandler(
+  filename = function() { paste0("plot-",Sys.Date(),".png")
+  },
+  content = function(file) {
+    
+    c<-class_GEI_reactive() %>%
+      filter(SUBCLASS_GEI == input$select_subclass_GEI) %>%
+      filter(ANNO_GEI %in% input$select_anno_GEI[1]:input$select_anno_GEI[2]) %>%
+      filter(`TIPO DE UNIDAD_GEI` == input$select_value_type_GEI) %>%
+      rename(SECTOR=SECTOR_GEI,
+             DIVISION=DIVISION_GEI,
+             CLASS=CLASS_GEI,
+             SUBCLASS=SUBCLASS_GEI,
+             ANNO=ANNO_GEI,
+             CONTAMINANTE=CONTAMINANTE_GEI,
+             UNIDAD=UNIDAD_GEI,
+             `TIPO DE UNIDAD`=`TIPO DE UNIDAD_GEI`,
+             VALOR=VALOR_GEI)  %>%
+      mutate(ANNO=as.numeric(as.character(ANNO)))
   
+  p_gei<-ggplot(data=c) +
+    geom_point(data=c,aes(x=ANNO,y=VALOR),size=5,color="black")+
+    geom_line(data=c,size=2,aes(x=ANNO,y=VALOR),color="navyblue")+
+    theme_bw()+
+    theme(legend.position = "none",
+          axis.text.x = element_text(size=10),
+          axis.text.y = element_text(size=12),
+          axis.title.x = element_text(size=14),
+          axis.title.y = element_text(size=14),
+          plot.title = element_text(size=16,hjust = 0.5))+
+    labs(x="",y=paste0("Emisiones (",unique(c$UNIDAD),";",unique(c$`TIPO DE UNIDAD`),")"))+
+    ggtitle(paste0(unique(c$CLASS)," -- ",unique(c$SUBCLASS),": Emisiones de ",unique(c$CONTAMINANTE)," por periodo (",unique(c$UNIDAD),";",unique(c$`TIPO DE UNIDAD`),")"))
+  
+  device <- function(..., width, height) {
+    grDevices::png(..., width = width, height = height,
+                   res = 300, units = "in")
+  }
+  
+  ggsave(file, plot = p_gei, device = device)
+  }
+)
+
+
 #-------------------
 # Code for the sidebar CONT 
 

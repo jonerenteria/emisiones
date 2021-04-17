@@ -13,8 +13,12 @@ navbarPage(
                         selectizeInput('select_subclass_GEI', "Subclass", choices = NULL), 
                         radioButtons("select_value_type_GEI", "Tipo de valor", choices = c("EM", "CO2-Eq"), selected = NULL), 
                         sliderInput("select_anno_GEI", "Rango de año", min = as.numeric(min(levels(gei_fin$ANNO_GEI))) , max = as.numeric(max(levels(gei_fin$ANNO_GEI))), 
-                                    value =  c(as.numeric(min(levels(gei_fin$ANNO_GEI))), as.numeric(max(levels(gei_fin$ANNO_GEI)))))
-             ),
+                                    value =  c(as.numeric(min(levels(gei_fin$ANNO_GEI))), as.numeric(max(levels(gei_fin$ANNO_GEI))))),
+             
+                        downloadButton("download_gei_table", "Download-Data"),
+                        downloadButton("download_gei_plot", "Download-Plot")
+                        
+                        ),
                           
              mainPanel(
                
