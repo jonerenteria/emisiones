@@ -84,6 +84,43 @@ output$data_gei <- renderTable({
 
 })
 
+#-------------------
+# Code for the mainbar GEI: plot
+
+output$plot_gei <- renderPlot({ 
+  
+  req(input$select_subclass_GEI)
+  
+  c<-class_GEI_reactive() %>%
+    filter(SUBCLASS_GEI == input$select_subclass_GEI) %>%
+    filter(ANNO_GEI %in% input$select_anno_GEI[1]:input$select_anno_GEI[2]) %>%
+    filter(`TIPO DE UNIDAD_GEI` == input$select_value_type_GEI) %>%
+    rename(SECTOR=SECTOR_GEI,
+           DIVISION=DIVISION_GEI,
+           CLASS=CLASS_GEI,
+           SUBCLASS=SUBCLASS_GEI,
+           ANNO=ANNO_GEI,
+           CONTAMINANTE=CONTAMINANTE_GEI,
+           UNIDAD=UNIDAD_GEI,
+           `TIPO DE UNIDAD`=`TIPO DE UNIDAD_GEI`,
+           VALOR=VALOR_GEI)  %>%
+    mutate(ANNO=as.numeric(as.character(ANNO)))
+  
+  ggplot(data=c) +
+    geom_point(data=c,aes(x=ANNO,y=VALOR),size=5,color="black")+
+    geom_line(data=c,size=2,aes(x=ANNO,y=VALOR),color="navyblue")+
+    theme_bw()+
+    theme(legend.position = "none",
+          axis.text.x = element_text(size=10),
+          axis.text.y = element_text(size=12),
+          axis.title.x = element_text(size=14),
+          axis.title.y = element_text(size=14),
+          plot.title = element_text(size=16,hjust = 0.5))+
+    labs(x="",y=paste0("Emisiones (",unique(c$UNIDAD),";",unique(c$`TIPO DE UNIDAD`),")"))+
+    ggtitle(paste0(unique(c$CLASS)," -- ",unique(c$SUBCLASS),": Emisiones de ",unique(c$CONTAMINANTE)," por periodo (",unique(c$UNIDAD),";",unique(c$`TIPO DE UNIDAD`),")"))
+  
+  
+})
 
   
 #-------------------
@@ -137,19 +174,30 @@ output$plot_cont <- renderPlot({
   
   req(input$select_descripcion_CONT)
 
-  ggplot(data=sector_CONT_reactive() %>%
-                      filter(DESCRIPCION_CONT == input$select_descripcion_CONT) %>%
-                      filter(ANNO_CONT %in% input$select_anno_CONT[1]:input$select_anno_CONT[2]) %>%
-                      rename(SECTOR=SECTOR_CONT,
-                             ACTIVIDAD=ACTIVIDAD_CONT,
-                             CONTAMINANTE=CONTAMINANTE_CONT,
-                             DESCRIPCION=DESCRIPCION_CONT,
-                             ANNO=ANNO_CONT,
-                             VALOR=VALOR_CONT,
-                             UNIDAD=UNIDAD_CONT),aes(x=as.numeric(as.character(ANNO)),y=VALOR)) +
-    geom_point()+
-    geom_line()+
-    theme_bw()
+  a<-sector_CONT_reactive() %>%
+    filter(DESCRIPCION_CONT == input$select_descripcion_CONT) %>%
+    filter(ANNO_CONT %in% input$select_anno_CONT[1]:input$select_anno_CONT[2]) %>%
+    rename(SECTOR=SECTOR_CONT,
+           ACTIVIDAD=ACTIVIDAD_CONT,
+           CONTAMINANTE=CONTAMINANTE_CONT,
+           DESCRIPCION=DESCRIPCION_CONT,
+           ANNO=ANNO_CONT,
+           VALOR=VALOR_CONT,
+           UNIDAD=UNIDAD_CONT) %>%
+    mutate(ANNO=as.numeric(as.character(ANNO)))
+  
+  ggplot(data=a) +
+    geom_point(data=a,aes(x=ANNO,y=VALOR),size=5,color="black")+
+    geom_line(data=a,aes(x=ANNO,y=VALOR),size=2,color="navyblue")+
+    theme_bw()+
+    theme(legend.position = "none",
+          axis.text.x = element_text(size=10),
+          axis.text.y = element_text(size=12),
+          axis.title.x = element_text(size=14),
+          axis.title.y = element_text(size=14),
+          plot.title = element_text(size=16,hjust = 0.5))+
+    labs(x="",y=paste0("Emisiones (",unique(a$UNIDAD),")"))+
+    ggtitle(paste0(unique(a$DESCRIPCION),": Emisiones de ",unique(a$CONTAMINANTE)," por periodo (",unique(a$UNIDAD),")"))
   
 })
 
@@ -195,7 +243,42 @@ output$data_met <- renderTable({
            DESCRIPCION=DESCRIPCION_MET,
            ANNO=ANNO_MET,
            VALOR=VALOR_MET,
-           UNIDAD=UNIDAD_MET)
+           UNIDAD=UNIDAD_MET) 
 })
+
+#-------------------
+# Code for the mainbar MET: plot
+
+output$plot_met <- renderPlot({ 
+  
+  req(input$select_descripcion_MET)
+  
+  b<-sector_MET_reactive() %>%
+    filter(DESCRIPCION_MET == input$select_descripcion_MET) %>%
+    filter(ANNO_MET %in% input$select_anno_MET[1]:input$select_anno_MET[2]) %>%
+    rename(SECTOR=SECTOR_MET,
+           ACTIVIDAD=ACTIVIDAD_MET,
+           CONTAMINANTE=CONTAMINANTE_MET,
+           DESCRIPCION=DESCRIPCION_MET,
+           ANNO=ANNO_MET,
+           VALOR=VALOR_MET,
+           UNIDAD=UNIDAD_MET) %>%
+    mutate(ANNO=as.numeric(as.character(ANNO)))
+  
+  ggplot(data=b) +
+    geom_point(data=b,aes(x=ANNO,y=VALOR),size=5,color="black")+
+    geom_line(data=b,aes(x=ANNO,y=VALOR),size=2,color="navyblue")+
+    theme_bw()+
+    theme(legend.position = "none",
+          axis.text.x = element_text(size=10),
+          axis.text.y = element_text(size=12),
+          axis.title.x = element_text(size=14),
+          axis.title.y = element_text(size=14),
+          plot.title = element_text(size=16,hjust = 0.5))+
+    labs(x="",y=paste0("Emisiones (",unique(b$UNIDAD),")"))+
+    ggtitle(paste0(unique(b$DESCRIPCION),": Emisiones de ",unique(b$CONTAMINANTE)," por periodo (",unique(b$UNIDAD),")"))
+  
+})
+
 
 }

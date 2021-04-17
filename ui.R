@@ -18,7 +18,7 @@ navbarPage(
                           
              mainPanel(
                
-               tableOutput("data_gei")
+               tableOutput("data_gei"),plotOutput("plot_gei")
              )),  
     
     
@@ -51,7 +51,7 @@ navbarPage(
          
            mainPanel(
              
-             tableOutput("data_met")   
+             tableOutput("data_met"),plotOutput("plot_met")
            ))
 
 )
