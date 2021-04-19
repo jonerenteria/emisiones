@@ -1,10 +1,11 @@
 
 source("data.R")
 
-navbarPage(
+fluidPage(
   
-
-  titlePanel("Shinny App Emisiones"),
+  theme = "https://stackpath.bootstrapcdn.com/bootswatch/3.4.1/spacelab/bootstrap.min.css",
+  titlePanel("Inventario Nacional de Emisiones"),
+  
   
   tabsetPanel(
     tabPanel("GEI: Gases de efecto invernadero",  
@@ -27,9 +28,9 @@ navbarPage(
              mainPanel(
                
                DT::DTOutput("data_gei"),
-               downloadButton("download_gei_table", "Descargar-Tabla", style = "color: #fff; background-color: #3333CC	; border-color: #fff"),
+               downloadButton("download_gei_table", "Descargar-Tabla", style = "color: #fff; background-color: black	; border-color: #fff"),
                plotOutput("plot_gei"), 
-               downloadButton("download_gei_plot", "Descargar-Grafico", style = "color: #fff; background-color: #3333CC; border-color: #fff")
+               downloadButton("download_gei_plot", "Descargar-Grafico", style = "color: #fff; background-color: black; border-color: #fff")
              )),  
     
     
@@ -47,9 +48,9 @@ navbarPage(
             mainPanel(
               
               DT::DTOutput("data_cont"),
-              downloadButton("download_cont_table", "Descargar-Tabla", style = "color: #fff; background-color: #3333CC	; border-color: #fff"),
+              downloadButton("download_cont_table", "Descargar-Tabla", style = "color: #fff; background-color: black	; border-color: #fff"),
               plotOutput("plot_cont"), 
-              downloadButton("download_cont_plot", "Descargar-Grafico", style = "color: #fff; background-color: #3333CC; border-color: #fff")
+              downloadButton("download_cont_plot", "Descargar-Grafico", style = "color: #fff; background-color: black; border-color: #fff")
               
             )), 
 
@@ -69,9 +70,9 @@ navbarPage(
            mainPanel(
              
              DT::DTOutput("data_met"),
-             downloadButton("download_met_table", "Descargar-Tabla", style = "color: #fff; background-color: #3333CC	; border-color: #fff"),
+             downloadButton("download_met_table", "Descargar-Tabla", style = "color: #fff; background-color: black	; border-color: #fff"),
              plotOutput("plot_met"), 
-             downloadButton("download_met_plot", "Descargar-Grafico", style = "color: #fff; background-color: #3333CC; border-color: #fff")
+             downloadButton("download_met_plot", "Descargar-Grafico", style = "color: #fff; background-color: black; border-color: #fff")
              
            ))
 
