@@ -21,19 +21,25 @@ Es posible acceder a la aplicación de dos formas diferentes: la primera, y la m
 
 1.	Descargue e instale: 
 
-+ R (https://www.r-project.org/)
-+ R studio (https://www.rstudio.com/)
+      + R (https://www.r-project.org/)
+      + RStudio (https://www.rstudio.com/)
 
-2.	En R studio, instale los siguientes paquetes: 
-
-```r
-   install.packages(c(“devtools”, “shiny”,” DT”,” grDevices” “dplyr”, “tidyr”, “ggplot2”))
-```
-
-3.	Descargue la aplicación utilizando el siguiente código en su consola: 
+2.	En RStudio, asegurese de tener los siguientes paquetes instalados:  
 
 ```r
-   devtools::install_github(“jonerenteria/emisiones”)
+   install.packages(c(“shiny”,” DT”,” grDevices” “dplyr”, “tidyr”, “ggplot2”))
 ```
 
-4.	Abra los archivos *ui.R* y *server.R* del proyecto “emisiones”, y haga click en Run App. 
+3.	En RStudio, comience un nuevo proyecto: File > New Project > Version Control > Git. En el recuadro *repository URL*, pegue el URL del repositorio de GitHub: https://github.com/jonerenteria/emisiones.git. 
+
+Es recomendable que guarde el proyecto en un directorio local de su ordenador y que abra el proyecto en una nueva sesión (*Open in new session*) seleccionando esta opción en el recuadro de la pantalla emergente. Finalmente, haga clic en *Create Project*. 
+
+4. 	El proyecto se abrirá automáticamente, y para acceder a la aplicación, debe escribir lo siguiente en la consola: 
+
+```r
+   shiny::runApp()
+```
+
+5.	La aplicación se abrira en su computadora. Podrá visualizar la aplicación en su navegador, haciendo clic en el recuadro *Open in Browser*, situado arriba a la izquierda de la pantalla. 
+
+6.      Para los siguientes usos de la app, simplemente abra el proyecto que ha guardado en su computadora y vuelva a escribir el código mostrado en el cuarto punto de esta guía.  
