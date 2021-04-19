@@ -19,27 +19,27 @@ Es posible acceder a la aplicación de dos formas diferentes: la primera, y la m
 <!-- ------------------------>
 <!-- ------------------------>
 
-1.	Descargue e instale: 
+1. Descargue e instale: 
 
       + R (https://www.r-project.org/)
       + RStudio (https://www.rstudio.com/)
 
-2.	En RStudio, asegurese de tener los siguientes paquetes instalados:  
+2. En RStudio, asegurese de tener los siguientes paquetes instalados:  
 
 ```r
    install.packages(c(“shiny”,” DT”,” grDevices” “dplyr”, “tidyr”, “ggplot2”))
 ```
 
-3.	En RStudio, comience un nuevo proyecto: File > New Project > Version Control > Git. En el recuadro *repository URL*, pegue el URL del repositorio de GitHub: https://github.com/jonerenteria/emisiones.git. 
+3. En RStudio, comience un nuevo proyecto: File > New Project > Version Control > Git. En el recuadro *repository URL*, pegue el URL del repositorio de GitHub: https://github.com/jonerenteria/emisiones.git. 
 
 Es recomendable que guarde el proyecto en un directorio local de su ordenador y que abra el proyecto en una nueva sesión (*Open in new session*) seleccionando esta opción en el recuadro de la pantalla emergente. Finalmente, haga clic en *Create Project*. 
 
-4. 	El proyecto se abrirá automáticamente, y para acceder a la aplicación, debe escribir lo siguiente en la consola: 
+4. El proyecto se abrirá automáticamente, y para acceder a la aplicación, debe escribir lo siguiente en la consola: 
 
 ```r
    shiny::runApp()
 ```
 
-5.	La aplicación se abrira en su computadora. Podrá visualizar la aplicación en su navegador, haciendo clic en el recuadro *Open in Browser*, situado arriba a la izquierda de la pantalla. 
+5. La aplicación se abrira en su computadora. Podrá visualizar la aplicación en su navegador, haciendo clic en el recuadro *Open in Browser*, situado arriba a la izquierda de la pantalla. 
 
-6.      Para los siguientes usos de la app, simplemente abra el proyecto que ha guardado en su computadora y vuelva a escribir el código mostrado en el cuarto punto de esta guía.  
+6. Para los siguientes usos de la app, simplemente abra el proyecto que ha guardado en su computadora y vuelva a escribir el código mostrado en el cuarto punto de esta guía.  
