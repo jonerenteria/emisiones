@@ -1,4 +1,3 @@
-library(data.table)
 library(shiny)
 library(dplyr)
 library(tidyr)
